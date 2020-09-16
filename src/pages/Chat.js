@@ -60,6 +60,36 @@ export default class Chat extends Component{
     }
     formatTime(timestamp){
         const d=new Date(timestamp);
-        const time=
+        const time='${d.getDate()}/${(d.getMonth()+1)}/${d.getFullYear()}${d.getHours()}:${d.getMinutes()}';
+        return time;
+    }
+    render(){
+        return(
+            <div>
+                <Header/>
+                <div className="chat-area" ref={this.myRef}>
+                     {/* loading indicator */}
+          {this.state.loadingChats ? <div className="spinner-border text-success" role="status">
+            <span className="sr-only">Loading...</span>
+          </div> : ""}
+          {/* chat area */}
+          {this.state.chats.map(chat => {
+            return <p key={chat.timestamp} className={"chat-bubble " + (this.state.user.uid === chat.uid ? "current-user" : "")}>
+              {chat.content}
+              <br />
+              <span className="chat-time float-right">{this.formatTime(chat.timestamp)}</span>
+            </p>
+          })}
+        </div>
+        <form onSubmit={this.handleSubmit} className="mx-3">
+          <textarea className="form-control" name="content" onChange={this.handleChange} value={this.state.content}></textarea>
+          {this.state.error ? <p className="text-danger">{this.state.error}</p> : null}
+          <button type="submit" className="btn btn-submit px-5 mt-4">Send</button>
+        </form>
+        <div className="py-5 mx-3">
+          Login in as: <strong className="text-info">{this.state.user.email}</strong>
+                </div>
+            </div>
+        );
     }
 }
